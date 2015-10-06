@@ -73,6 +73,8 @@ public class Bot extends PircBot {
 	 */
 	public LinkedList<Server> servers;
 
+	public HashMap<String, LinkedList<Server>> vSHashmap;
+
 	/**
 	 * Holds the timer (for timed broadcasts)
 	 */
@@ -87,17 +89,17 @@ public class Bot extends PircBot {
 	 * The amount of times the "terminate" command has been confirmed.
 	 */
 	private int terminateConfirmationTimes = 0;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private long terminateTimestamp = System.currentTimeMillis();
-	
+
 	// Debugging purposes only
 	public static Bot staticBot;
-	
+
 	private Boolean debugMode = false;
-	
+
 	public VersionParser versionParser;
 
 	/**
@@ -111,7 +113,7 @@ public class Bot extends PircBot {
 
 		// Set up the logger
 		Logger.setLogFile(cfg_data.bot_logfile);
-		
+
 		// Parse versions.json
 		versionParser = new VersionParser(cfgfile.filepath);
 
@@ -142,6 +144,9 @@ public class Bot extends PircBot {
 
 		// Set up the server arrays
 		this.servers = new LinkedList<>();
+		this.vSHashmap = new HashMap<String, LinkedList<Server>>();
+		for (Version v : versionParser.list)
+			this.vSHashmap.put(v.name, new LinkedList<Server>());
 
 		// Set up MySQL
 		 MySQL.setMySQL(this, cfg_data.mysql_host, cfg_data.mysql_user, cfg_data.mysql_pass, cfg_data.mysql_port, cfg_data.mysql_db);
@@ -492,6 +497,9 @@ public class Bot extends PircBot {
 				case ".killall":
 					processKillAll(userLevel);
 					break;
+				case ".killversion":
+					processKillVersion(userLevel, keywords);
+					break;
 				case ".killmine":
 					processKillMine(userLevel, hostname);
 					break;
@@ -639,7 +647,7 @@ public class Bot extends PircBot {
 		if (isAccountTypeOf(userLevel, OPERATOR))
 			return ".addban .addstartwad .autorestart .banwad .broadcast .commands .cpu .delban .delstartwad .file .get .help" +
 			" .host .kill .killall .killmine .killinactive .liststartwads .load " +
-			".notice .off .on .owner .protect .purgebans .query .rcon .save .send .servers .shell .slot .terminate .unbanwad " + 
+			".notice .off .on .owner .protect .purgebans .query .rcon .save .send .servers .shell .slot .terminate .unbanwad " +
 			".uptime .whoami";
 		else if (isAccountTypeOf(userLevel, ADMIN))
 			return ".addban .addstartwad .autorestart .banwad .broadcast .commands .cpu .delban .delstartwad .file .get .help" +
@@ -816,6 +824,37 @@ public class Bot extends PircBot {
 			sendMessage(cfg_data.irc_channel, "You do not have permission to use this command.");
 	}
 
+	private void processKillVersion(int userlevel, String[] keywords) {
+		if (isAccountTypeOf(userlevel, ADMIN)) {
+			if (keywords.length != 2) {
+				sendMessage(cfg_data.irc_channel, "Invalid amount of arguments. Syntax: .killversion <version>");
+				return;
+			}
+
+			String version = keywords[1];
+
+			if (!vSHashmap.containsKey(version)) {
+				sendMessage(cfg_data.irc_channel, "Unknown version " + version);
+				return;
+			}
+
+			List<Server> tempList = new LinkedList<Server>(vSHashmap.get(version));
+			if (tempList.size() < 1) {
+				sendMessage(cfg_data.irc_channel, "No servers to kill.");
+				return;
+			}
+
+			int killed = 0;
+			for (Server s : tempList) {
+				s.hide_stop_message = true;
+				s.auto_restart = false;
+				s.killServer();
+				killed++;
+			}
+
+			sendMessage(cfg_data.irc_channel, "Killed a total of " + killed + " servers.");
+		}
+	}
 	/**
 	 * This will look through the list and kill all the servers that the hostname owns
 	 * @param userLevel The level of the user
@@ -1122,15 +1161,15 @@ public class Bot extends PircBot {
 							StringBuffer stringBuffer = new StringBuffer();
 							Process process;
 							Boolean gotException = false;
-							
+
 							try {
 								process = Runtime.getRuntime().exec(Functions.implode(Arrays.copyOfRange(keywords, 1, keywords.length), " "));
 								process.waitFor();
-								 
-							    BufferedReader reader = 
+
+							    BufferedReader reader =
 							         new BufferedReader(new InputStreamReader(process.getInputStream()));
-							 
-							    String line = "";			
+
+							    String line = "";
 							    while ((line = reader.readLine())!= null)
 							    	stringBuffer.append(line + "\n");
 							} catch (Exception e) {
@@ -1138,12 +1177,12 @@ public class Bot extends PircBot {
 								e.printStackTrace();
 								sendMessage(sender, "An exception occured while executing the command.");
 							}
-						    
+
 							if (!gotException) {
 								String[] lines = stringBuffer.toString().split("\n");
-								
+
 								sendMessage(sender, "Output is " + lines.length + " lines long.");
-								
+
 								for (int n = 0; n < lines.length; n++) {
 									String s = lines[n];
 									s.replace("\n", "");
@@ -1153,7 +1192,7 @@ public class Bot extends PircBot {
 						}
 					} else
 						sendMessage(sender, "You are not permitted to use this command.");
-					
+
 					break;
 				case ".terminate":
 					if (isAccountTypeOf(userLevel, OPERATOR)) {
@@ -1161,7 +1200,7 @@ public class Bot extends PircBot {
 							terminateConfirmationTimes = 0;
 							terminateTimestamp = System.currentTimeMillis();
 						}
-						
+
 						if (System.currentTimeMillis() / 1000 <= (terminateTimestamp / 1000) + 5) {
 							if (terminateConfirmationTimes == 0) {
 								sendMessage(sender, "WARNING: This command WILL terminate the bot.");
@@ -1170,7 +1209,7 @@ public class Bot extends PircBot {
 								sendMessage(sender, " - If you're REALLY sure you want to kill the bot, type .terminate again -");
 								terminateConfirmationTimes += 1;
 							}
-							
+
 							else if (terminateConfirmationTimes == 1) {
 								sendMessage(sender, "The bot will close NOW!");
 								messageChannel(("- - The bot is closing now (terminate command issued by " + sender + ") -").split(" "), sender);
@@ -1178,10 +1217,10 @@ public class Bot extends PircBot {
 								System.exit(1);
 							}
 						}
-						
+
 					} else
 						sendMessage(sender, "You are not permitted to use this command.");
-					
+
 					break;
 				default:
 					break;
@@ -1274,7 +1313,7 @@ public class Bot extends PircBot {
 			e.printStackTrace();
 			return;
 		}
-		
+
 		// Start the bot
 		Bot b = new Bot(cfg_data);
 		b.config_file = args[0];

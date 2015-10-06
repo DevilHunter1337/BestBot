@@ -50,3 +50,6 @@ local.properties
 
 # TeXlipse plugin
 .texlipse
+
+# output
+classes/
