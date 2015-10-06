@@ -54,12 +54,12 @@ public class ServerProcess extends Thread {
 	 * Counts how many times the server has automatically restarted
 	 */
 	public short restarts = 0;
-	
+
 	/**
 	 * Config data
 	 */
 	public ConfigData cfg_data;
-	
+
 	/**
 	 * This should be called before starting run
 	 * @param serverReference A reference to the server it is connected to (establishing a back/forth relationship to access its data)
@@ -139,14 +139,14 @@ public class ServerProcess extends Thread {
 
 		if (server.config != null)
 			addParameter("+exec", server.bot.cfg_data.bot_cfg_directory_path + server.config);
-			
+
 		// Optional WADs
 		if (server.optwads.size() > 0) {
 			for (String wad : server.optwads) {
 				addParameter("-optfile", server.bot.cfg_data.bot_wad_directory_path + wad);
 			}
 		}
-		
+
 		if (server.skill != -1)
 			addParameter("+skill", String.valueOf(server.skill));
 
@@ -283,6 +283,7 @@ public class ServerProcess extends Thread {
 					server.bot.sendDebugMessage("Found \"UDP Initialized.\" in server output. Assuming the server started.");
 					System.out.println(strLine);
 					server.bot.servers.add(server);
+					server.bot.vSHashmap.get(server.version.name).add(server);
 					server.bot.sendMessage(server.irc_channel, "Server started successfully on port " + server.port + "!");
 					server.bot.sendMessage(server.sender, "To kill your server, in the channel " + server.bot.cfg_data.irc_channel + ", type .killmine to kill all of your servers, or .kill " + server.port + " to kill just this one.");
 				}
@@ -348,7 +349,7 @@ public class ServerProcess extends Thread {
 			server.bot.sendDebugMessage("EXCEPTION - " + e.getMessage());
 			for (StackTraceElement element : trace)
 				server.bot.sendDebugMessage("TRACE - " + element.toString());
-			
+
 			e.printStackTrace();
 		} finally {
 			try {
