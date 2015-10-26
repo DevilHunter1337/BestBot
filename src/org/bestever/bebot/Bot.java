@@ -741,7 +741,7 @@ public class Bot extends PircBot {
 					sendMessage(cfg_data.irc_channel, "You have reached your server limit (" + slots + ")");
 			}
 			else
-				sendMessage(cfg_data.irc_channel, "You must register with BestEver and be logged in to IRC to use the bot to host!");
+				sendMessage(cfg_data.irc_channel, "You must register with Painkiller and be logged in to IRC to use the bot to host!");
 		}
 		else
 			sendMessage(cfg_data.irc_channel, "The bot is currently disabled from hosting for the time being. Sorry for any inconvenience!");
