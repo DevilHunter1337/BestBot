@@ -635,7 +635,7 @@ public class Bot extends PircBot {
 		if (isAccountTypeOf(level, REGISTERED))
 			return "You are logged in as " + Functions.getUserName(hostname);
 		else
-			return "You are not logged in or do not have an account with Painkiller. Please visit http://www.painkiller.allfearthesentinel.net/ for instructions on how to register";
+			return "You are not logged in or do not have an account with Painkiller. Please visit http://painkiller.allfearthesentinel.net/ for instructions on how to register";
 	}
 
 	/**
