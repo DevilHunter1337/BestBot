@@ -1,4 +1,0 @@
-[
-        { "name": "2.0", "path": "/home/skulltag/BestBot/zandronum-server", default: true, "description": "Zandronum 2.0", "data": "skulltag_actors_1-1-1.pk3 skulltag_data_126.pk3" },
-        { "name": "3.0", "path": "/home/skulltag/BestBot/zandronum/zandronum-server", default: false, "description": "Zandronum 3.0, for testing", "data": "skulltag_actors.pk3 skulltag_data_126.pk3" },
-]

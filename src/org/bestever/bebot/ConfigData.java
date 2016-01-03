@@ -72,6 +72,11 @@ public class ConfigData {
 	 */
 	public String irc_mask;
 
+    /**
+     * Allow relaying server messages that begin with !irc to the IRC channel?
+     */
+    public boolean irc_relay;
+
 	/**
 	 * The mysql host
 	 */
@@ -217,7 +222,7 @@ public class ConfigData {
 	 * Interval to run server cleanup
 	 */
 	public int cleanup_interval;
-	
+
 	/**
 	 * Maximum times to restart server
 	 */
@@ -276,6 +281,8 @@ public class ConfigData {
 		this.irc_pass = irc.get("pass");
 		this.irc_port = Integer.parseInt(irc.get("port"));
 		this.irc_mask = irc.get("hostmask");
+		if (irc.get("irc_relay") != null)
+			this.irc_relay = Boolean.parseBoolean(irc.get("irc_relay"));
 
 		// Load the MYSQL section
 		Ini.Section mysql = ini.get("mysql");
