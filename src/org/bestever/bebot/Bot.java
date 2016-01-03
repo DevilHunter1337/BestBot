@@ -641,7 +641,7 @@ public class Bot extends PircBot {
 		if (isAccountTypeOf(level, REGISTERED))
 			return "You are logged in as " + Functions.getUserName(hostname);
 		else
-			return "You are not logged in or do not have an account with BE. Please visit http://www.best-ever.org/ for instructions on how to register";
+			return "You are not logged in or do not have an account with Exciter. Please visit http://www.exciter.allfearthesentinel.net/ for instructions on how to register";
 	}
 
 	/**
@@ -1031,7 +1031,7 @@ public class Bot extends PircBot {
 						if (Functions.getUserName(s.irc_hostname).equals(Functions.getUserName(hostname)) || isAccountTypeOf(userLevel, MODERATOR)) {
 							sendMessage(sender, "RCON: " + s.rcon_password);
 							sendMessage(sender, "ID: " + s.server_id);
-							sendMessage(sender, "LOG: http://static.best-ever.org/logs/" + s.server_id + ".txt");
+							sendMessage(sender, "LOG: http://static.exciter.allfearthesentinel.net/logs/" + s.server_id + ".txt");
 						}
 						else
 							sendMessage(sender, "You do not own this server.");

@@ -254,7 +254,7 @@ public class ServerProcess extends Thread {
 			// NOTE: As of now, BE users can still check the RCON password by accessing the control panel on the website.
 			// We'll fix this later by changing the RCON from the unique_id to a random MD5 hash
 			if (server.bot.cfg_data.bot_public_rcon || AccountType.isAccountTypeOf(server.user_level, AccountType.RCON))
-				server.bot.sendMessage(server.sender, "Your unique server ID is: " + server.server_id + ". This is your RCON password, which can be used using 'send_password "+server.server_id+"' via the in-game console. You can view your logfile at http://static.best-ever.org/logs/" + server.server_id + ".txt");
+				server.bot.sendMessage(server.sender, "Your unique server ID is: " + server.server_id + ". This is your RCON password, which can be used using 'send_password "+server.server_id+"' via the in-game console. You can view your logfile at http://static.exciter.allfearthesentinel.net/logs/" + server.server_id + ".txt");
 
 			// Process server while it outputs text
 			while ((strLine = br.readLine()) != null) {
@@ -293,7 +293,7 @@ public class ServerProcess extends Thread {
 					String ip = keywords[keywords.length-1].split(":")[0];
 					String pIP;
 					if ((pIP = MySQL.checkBanned(ip)) != null)
-						server.in.println("addban " + pIP + " perm \"You have been banned from TSPG Exciter. If you feel that this is an error, please visit irc.zandronum.com #bestever.\"");
+						server.in.println("addban " + pIP + " perm \"You have been banned from TSPG Exciter. If you feel that this is an error, please visit irc.zandronum.com #tspg-exciter.\"");
 				}
 
                 if (keywords[0].equals("CHAT") && server.bot.cfg_data.irc_relay) {
