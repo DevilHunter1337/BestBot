@@ -1,7 +1,0 @@
-[
-	// THIS IS AN EXAMPLE FILE FOR versions.json
-	// This file specifies the versions that can be used to host servers.
-	// The following is an example, and it explains the syntax well.
-	{ "name": "2.0", "path": "/usr/games/zandronum-server", default: true, "description": "Zandronum 2.0" },
-	{ "name": "3.0", "path": "/home/user/zandronum/zandronum-server", default:false, "description": "Zandronum 3.0, for testing" },
-]
