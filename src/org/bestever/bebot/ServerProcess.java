@@ -296,6 +296,18 @@ public class ServerProcess extends Thread {
 						server.in.println("addban " + pIP + " perm \"You have been banned from TSPG Exciter. If you feel that this is an error, please visit irc.zandronum.com #bestever.\"");
 				}
 
+                if (keywords[0].equals("CHAT") && server.bot.cfg_data.irc_relay) {
+                    int commaIndex = strLine.indexOf(":");
+					int ircIndex = strLine.indexOf("!irc ", commaIndex);
+                    System.out.println(String.format("comma: %d | irc: %d | str: %s", commaIndex, ircIndex, strLine));
+                    if (commaIndex != -1 && ircIndex == 1) {
+                        String sender = strLine.substring(0, commaIndex);
+                        String message = strLine.substring(ircIndex, strLine.length());
+
+                        server.bot.sendMessage(server.irc_channel, server.port + " | " + sender + ":" + message);
+                    }
+				}
+
 				// Check for RCON password changes
 				if (keywords.length > 3) {
 					if (keywords[0].equals("->") && keywords[1].equalsIgnoreCase("sv_rconpassword"))
