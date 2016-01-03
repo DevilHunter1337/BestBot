@@ -641,7 +641,7 @@ public class Bot extends PircBot {
 		if (isAccountTypeOf(level, REGISTERED))
 			return "You are logged in as " + Functions.getUserName(hostname);
 		else
-			return "You are not logged in or do not have an account with Painkiller. Please visit http://painkiller.allfearthesentinel.net/ for instructions on how to register";
+			return "You are not logged in or do not have an account with BE. Please visit http://www.best-ever.org/ for instructions on how to register";
 	}
 
 	/**
@@ -747,7 +747,7 @@ public class Bot extends PircBot {
 					sendMessage(cfg_data.irc_channel, "You have reached your server limit (" + slots + ")");
 			}
 			else
-				sendMessage(cfg_data.irc_channel, "You must register with Painkiller and be logged in to IRC to use the bot to host!");
+				sendMessage(cfg_data.irc_channel, "You must register with BestEver and be logged in to IRC to use the bot to host!");
 		}
 		else
 			sendMessage(cfg_data.irc_channel, "The bot is currently disabled from hosting for the time being. Sorry for any inconvenience!");
@@ -1031,7 +1031,7 @@ public class Bot extends PircBot {
 						if (Functions.getUserName(s.irc_hostname).equals(Functions.getUserName(hostname)) || isAccountTypeOf(userLevel, MODERATOR)) {
 							sendMessage(sender, "RCON: " + s.rcon_password);
 							sendMessage(sender, "ID: " + s.server_id);
-							sendMessage(sender, "LOG: http://static.painkiller.allfearthesentinel.net/logs/" + s.server_id + ".txt");
+							sendMessage(sender, "LOG: http://static.best-ever.org/logs/" + s.server_id + ".txt");
 						}
 						else
 							sendMessage(sender, "You do not own this server.");
